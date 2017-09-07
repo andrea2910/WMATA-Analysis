@@ -88,6 +88,16 @@ def add_variables(data):
     data['is_ok'] = data['text'].apply(is_ok)
     data['is_irrelevant'] = data['text'].apply(is_irrelevant)
     data['tweet_score'] = data['cleaned_tweet'].apply(get_sentiment_score)
+    unhappy_scores = [0]*data.shape[0]
+    #for each row generate a score
+    for index, row in data.iterrows():
+        score = 0
+        if row['is_angry']:
+            score = score + row['favorite_count'] + row['retweet_count'] + 1
+        if row['is_delay']:
+            score = score + row['favorite_count'] + row['retweet_count'] + 1
+        unhappy_scores[index] = score
+    data['unhappy_score'] = unhappy_scores
     return data
 	
 tweets = pd.read_csv("tweets.csv")
